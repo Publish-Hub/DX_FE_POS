@@ -13057,7 +13057,7 @@ class ModalPaymentComponent {
       });
     } else {
       return this.collectService.CollectionOrder(this.formGroup.value).subscribe(response => {
-        debugger;
+        // debugger;
         if (response.isSuccess == true) {
           this.remainingMessage = '';
           console.log(response);

@@ -248,7 +248,7 @@ class LoginComponent {
   }
   getToken() {
     this._activeRoute.queryParams.subscribe(x => {
-      debugger;
+      //debugger
       this.token = x['token'];
       let redirectUrl = x['redirectUrl'];
       if (this.token) {
