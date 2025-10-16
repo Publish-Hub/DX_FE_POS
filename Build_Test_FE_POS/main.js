@@ -1128,7 +1128,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Portal ID (for ClickPortal)
-const PORTAL_ID = '17001';
+const PORTAL_ID = '9001';
 const SESSION_FLAG_CLICK = `portalClick:${PORTAL_ID}`;
 const SESSION_FLAG_USER = `ssoUserSaved`;
 const DEV_BYPASS = false;
