@@ -1105,9 +1105,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Portal ID (for ClickPortal)
-const PORTAL_ID = '9009';
+const PORTAL_ID = '9001';
 const SESSION_FLAG_CLICK = `portalClick:${PORTAL_ID}`;
 const SESSION_FLAG_USER = `ssoUserSaved`;
+const DEV_BYPASS = false;
 const authGuard = (route, state) => handleAuthGuard(route, state.url);
 const authChildGuard = (route, state) => handleAuthGuard(route, state.url);
 const authMatchGuard = (route, segments) => {
@@ -1205,19 +1206,26 @@ function refreshAndRetry(authService, tokenStore, router) {
   return tokenSubject.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_14__.filter)(t => t !== null), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_15__.take)(1), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_11__.map)(() => true));
 }
 function ensureSsoUserSaved(tokenStore, jwtHelper) {
-  if (sessionStorage.getItem(SESSION_FLAG_USER) === '1') return;
+  if (DEV_BYPASS || !tokenStore.isSingleSignOnMode || sessionStorage.getItem(SESSION_FLAG_USER) === '1') {
+    return;
+  }
   const token = tokenStore.ssoAccessToken;
-  if (!token) return;
-  try {
-    const decoded = jwtHelper.decodeToken(token);
-    const id = decoded.nameid || decoded.UserID || decoded.sub || null;
-    tokenStore.saveUser({
-      nameid: id,
-      UserID: id,
-      fullName: decoded.unique_name ?? decoded.name ?? ''
-    });
-    sessionStorage.setItem(SESSION_FLAG_USER, '1');
-  } catch {}
+  if (!token) {
+    return;
+  }
+  const decoded = jwtHelper.decodeToken(token);
+  if (!decoded) {
+    return;
+  }
+  const id = decoded.nameid ?? decoded.UserID ?? decoded.sid ?? decoded.sub ?? decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid'] ?? decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ?? null;
+  const user = {
+    nameid: id,
+    UserID: id,
+    fullName: decoded.unique_name ?? decoded.name ?? '',
+    userPortals: decoded.userPortals ?? []
+  };
+  tokenStore.saveUser(user);
+  sessionStorage.setItem(SESSION_FLAG_USER, '1');
 }
 function ensurePortalClickIfSso(tokenStore, httpService) {
   if (sessionStorage.getItem(SESSION_FLAG_CLICK) === '1') return;
