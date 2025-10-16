@@ -2144,6 +2144,23 @@ class TokenStorageService {
       console.error('Error saving employee info', err);
     }
   }
+  /* ─────────────────────────────────────────────────────────────
+   * 8) NAME HELPERS
+   *    Extract first and last name from user.fullName
+   * ───────────────────────────────────────────────────────────── */
+  get firstName() {
+    const user = this.getUser;
+    if (user?.FirstName) return user.FirstName;
+    if (!user?.fullName) return '';
+    return user.fullName.split(' ')[0] || '';
+  }
+  get lastName() {
+    const user = this.getUser;
+    if (user?.LastName) return user.LastName || user.SecondName || '';
+    if (!user?.fullName) return '';
+    const parts = user.fullName.split(' ');
+    return parts.length > 1 ? parts.slice(1).join(' ') : '';
+  }
 }
 TokenStorageService.ɵfac = function TokenStorageService_Factory(t) {
   return new (t || TokenStorageService)();
