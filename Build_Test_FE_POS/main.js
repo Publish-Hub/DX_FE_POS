@@ -909,19 +909,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "JwtInterceptor": () => (/* binding */ JwtInterceptor)
 /* harmony export */ });
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common/http */ 58987);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ 10745);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ 25474);
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! rxjs/operators */ 51353);
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs/operators */ 53158);
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs/operators */ 32673);
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! rxjs/operators */ 60116);
-/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! rxjs/operators */ 59295);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ 58987);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ 10745);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ 25474);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs/operators */ 51353);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs/operators */ 53158);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! rxjs/operators */ 32673);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! rxjs/operators */ 60116);
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! rxjs/operators */ 59295);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/environments/environment */ 92340);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @angular/core */ 22560);
-/* harmony import */ var _services_token_storage_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/token-storage.service */ 11573);
-/* harmony import */ var _auth_services_auth_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../auth/services/auth.service */ 16518);
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/router */ 60124);
+/* harmony import */ var _shared_routes_apiUrl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../shared/routes/apiUrl */ 15411);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/core */ 22560);
+/* harmony import */ var _services_token_storage_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/token-storage.service */ 11573);
+/* harmony import */ var _auth_services_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../auth/services/auth.service */ 16518);
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/router */ 60124);
+
 
 
 
@@ -936,19 +938,25 @@ class JwtInterceptor {
     this.tokenStore = tokenStore;
     this.authService = authService;
     this.router = router;
-    this.refreshUrl = `${src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.masterBaseUrl}User/RefreshThirdPartyToken`;
-    this.getAccessUrl = `${src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.masterBaseUrl}User/GetAccess`;
-    this.rawHttp = new _angular_common_http__WEBPACK_IMPORTED_MODULE_3__.HttpClient(handler);
+    this.getAccessEndpoint = `${src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.masterBaseUrl.replace(/\/+$/, '')}/${_shared_routes_apiUrl__WEBPACK_IMPORTED_MODULE_1__.ApiUrls.User.GetAccess.replace(/^\/+/, '')}`;
+    this.refreshEndpoint = `${src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.masterBaseUrl.replace(/\/+$/, '')}/${_shared_routes_apiUrl__WEBPACK_IMPORTED_MODULE_1__.ApiUrls.User.RefreshThirdPartyToken.replace(/^\/+/, '')}`;
+    this.rawHttp = new _angular_common_http__WEBPACK_IMPORTED_MODULE_4__.HttpClient(handler);
+  }
+  isTokenEndpoint(url) {
+    return url.startsWith(this.getAccessEndpoint) || url.startsWith(this.refreshEndpoint);
   }
   intercept(req, next) {
     const localToken = this.tokenStore.token;
     const ssoAccess = this.tokenStore.ssoAccessToken;
     const inSsoMode = this.tokenStore.isSingleSignOnMode;
-    const tokenToUse = this.isTokenEndpoint(req.url) ? ssoAccess || localToken : localToken || ssoAccess;
+    const tokenToUse = this.isTokenEndpoint(req.url) ? ssoAccess || localToken || null : localToken || ssoAccess || null;
     const authedReq = tokenToUse ? this.addAuth(req, tokenToUse) : req;
-    return next.handle(authedReq).pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_4__.mergeMap)(event => {
-      if (event instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_3__.HttpResponse) {
+    return next.handle(authedReq).pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_5__.mergeMap)(event => {
+      if (event instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_4__.HttpResponse) {
         const body = event.body;
+        if (event.url?.startsWith(this.getAccessEndpoint) && body?.Status === true) {
+          this.saveUserFromGetAccess(body);
+        }
         if (body?.Status === false && (body?.Error === 'Token has expired' || body?.Message === 'Token has expired')) {
           const ssoRefresh = this.tokenStore.ssoRefreshToken;
           if (inSsoMode && ssoRefresh) {
@@ -956,14 +964,29 @@ class JwtInterceptor {
           }
         }
       }
-      return (0,rxjs__WEBPACK_IMPORTED_MODULE_5__.of)(event);
-    }), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_6__.catchError)(err => this.handleError(err, authedReq, next)));
+      return (0,rxjs__WEBPACK_IMPORTED_MODULE_6__.of)(event);
+    }), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_7__.catchError)(err => {
+      return this.handleError(err, authedReq, next);
+    }));
   }
-  isTokenEndpoint(url) {
-    return url.includes('GetAccess') || url.includes('RefreshThirdPartyToken');
+  saveUserFromGetAccess(res) {
+    const d = res?.Data;
+    if (!d) return;
+    const id = d.EmployeeID && d.EmployeeID !== 0 ? d.EmployeeID : d.ID && d.ID !== 0 ? d.ID : d.MarkaziaUserID ?? null;
+    const fullName = [d.FirstName, d.SecondName, d.ThirdName, d.LastName].filter(Boolean).join(' ') || d.Email || '';
+    this.tokenStore.saveUser({
+      nameid: id,
+      UserID: id,
+      EmployeeID: d.EmployeeID ?? d.ID ?? null,
+      EmpNo: d.EmpNo ?? null,
+      Email: d.Email ?? '',
+      fullName,
+      userPortals: []
+    });
+    this.tokenStore.saveEmployeeInfo(res);
   }
   handleError(err, req, next) {
-    if (err instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_3__.HttpErrorResponse && err.status === 401) {
+    if (err instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_4__.HttpErrorResponse && err.status === 401) {
       const message = err?.error?.Message || err?.error?.Error || err?.message || '';
       const expired = /expired|invalid/i.test(message);
       if (expired) {
@@ -973,7 +996,7 @@ class JwtInterceptor {
         }
       }
     }
-    return (0,rxjs__WEBPACK_IMPORTED_MODULE_7__.throwError)(() => err);
+    return (0,rxjs__WEBPACK_IMPORTED_MODULE_8__.throwError)(() => err);
   }
   refreshAndRetry(req, next, refreshToken) {
     const {
@@ -981,14 +1004,14 @@ class JwtInterceptor {
       tokenSubject
     } = this.authService.getRefreshState();
     if (!isRefreshing) {
-      return this.authService.refreshToken(refreshToken).pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_8__.switchMap)(({
+      return this.authService.refreshToken(refreshToken).pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_9__.switchMap)(({
         accessToken
       }) => {
         const retried = this.addAuth(req, accessToken);
         return next.handle(retried);
-      }), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_6__.catchError)(e => (0,rxjs__WEBPACK_IMPORTED_MODULE_7__.throwError)(() => e)));
+      }), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_7__.catchError)(e => (0,rxjs__WEBPACK_IMPORTED_MODULE_8__.throwError)(() => e)));
     }
-    return tokenSubject.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_9__.filter)(t => !!t), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_10__.take)(1), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_8__.switchMap)(t => next.handle(this.addAuth(req, t))));
+    return tokenSubject.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_10__.filter)(t => !!t), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_11__.take)(1), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_9__.switchMap)(t => next.handle(this.addAuth(req, t))));
   }
   addAuth(req, token) {
     return req.clone({
@@ -999,9 +1022,9 @@ class JwtInterceptor {
   }
 }
 JwtInterceptor.ɵfac = function JwtInterceptor_Factory(t) {
-  return new (t || JwtInterceptor)(_angular_core__WEBPACK_IMPORTED_MODULE_11__["ɵɵinject"](_services_token_storage_service__WEBPACK_IMPORTED_MODULE_1__.TokenStorageService), _angular_core__WEBPACK_IMPORTED_MODULE_11__["ɵɵinject"](_auth_services_auth_service__WEBPACK_IMPORTED_MODULE_2__.AuthService), _angular_core__WEBPACK_IMPORTED_MODULE_11__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_12__.Router), _angular_core__WEBPACK_IMPORTED_MODULE_11__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_3__.HttpBackend));
+  return new (t || JwtInterceptor)(_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵinject"](_services_token_storage_service__WEBPACK_IMPORTED_MODULE_2__.TokenStorageService), _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵinject"](_auth_services_auth_service__WEBPACK_IMPORTED_MODULE_3__.AuthService), _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵinject"](_angular_router__WEBPACK_IMPORTED_MODULE_13__.Router), _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵinject"](_angular_common_http__WEBPACK_IMPORTED_MODULE_4__.HttpBackend));
 };
-JwtInterceptor.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_11__["ɵɵdefineInjectable"]({
+JwtInterceptor.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵdefineInjectable"]({
   token: JwtInterceptor,
   factory: JwtInterceptor.ɵfac
 });
@@ -1105,7 +1128,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Portal ID (for ClickPortal)
-const PORTAL_ID = '9001';
+const PORTAL_ID = '17001';
 const SESSION_FLAG_CLICK = `portalClick:${PORTAL_ID}`;
 const SESSION_FLAG_USER = `ssoUserSaved`;
 const DEV_BYPASS = false;
@@ -2112,6 +2135,14 @@ class TokenStorageService {
   get currentUserId() {
     const u = this.getUser || {};
     return u?.nameid ?? u?.UserID ?? null;
+  }
+  saveEmployeeInfo(data) {
+    if (!data) return;
+    try {
+      localStorage.setItem('employeeData', JSON.stringify(data));
+    } catch (err) {
+      console.error('Error saving employee info', err);
+    }
   }
 }
 TokenStorageService.ɵfac = function TokenStorageService_Factory(t) {
