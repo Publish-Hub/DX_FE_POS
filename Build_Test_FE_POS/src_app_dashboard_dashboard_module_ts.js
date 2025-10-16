@@ -1521,25 +1521,36 @@ class SidenavComponent {
         this._commonService.NavigateToRoute(canClickItem?.url);
       }
     });
-    // Normal user (role check)
+    // For normal users
     if (this.sharedService.getRole?.roleId == 1) {
       this.GetUserMenu();
     }
-    // Always load basic menu
     this.getUserMenuNew();
-    // 🟢 NEW: SSO MODE HANDLER
     if (this.tokenStore?.isSingleSignOnMode) {
-      console.log('%c[SSO MODE] Detected → loading user info + menu', 'color:#00b894');
-      const decoded = this._commonService.decodeToken(this.tokenStore?.ssoAccessToken);
-      const userId = +decoded?.nameid;
-      if (userId) {
+      console.log('%c[SSO MODE] Detected → initializing user data', 'color:#00b894');
+      const user = this.tokenStore.getUser;
+      if (user) {
+        console.log("USER : ", user);
+        const userId = +user.nameid || +user.UserID || +user.EmployeeID || 0;
+        console.log("USER ID : ", userId);
+        localStorage.setItem('userid', userId.toString());
+        localStorage.setItem('fullName', user.fullName || '');
+        localStorage.setItem('email', user.Email || '');
         this.getUserDetails(userId);
+        this.getUserPermissions(userId);
         this.getUserMenuNew();
         this.GetUserMenu();
       } else {
-        console.warn('[SSO] No userId found in decoded token');
+        console.warn('[SSO] No valid user found in tokenStore.getUser');
       }
     }
+  }
+  getUserPermissions(userId) {
+    this.GeneralService.getUserPermissions(userId).subscribe(response => {
+      if (response?.data) {
+        localStorage.setItem('permissions', JSON.stringify(response.data));
+      }
+    });
   }
   getUserDetails(userId) {
     this.GeneralService.GetUserDetails(userId).subscribe(response => {
