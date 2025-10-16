@@ -5285,7 +5285,7 @@ const environment = {
   apiUrl2: 'https://dxdevadminfinance.markaziaapis.com/api/',
   masterBaseUrl: 'https://dxdevmaster.markaziaapis.com/api/',
   cmBaseUrl: 'https://dxdevpns.markaziaapis.com/api/',
-  portalPageUrl: 'https://dxdevportal.markaziahub.com',
+  portalPageUrl: 'https://dxdevportal.markaziahub.com/',
   markaziaHubUrl: 'https://dev.markaziahub.com/'
   //apiUrl: 'https://posbe.markaziasystem.com/api/',  //live
   //apiUrl2: 'https://adminbe.markaziasystem.com/api/', //live
