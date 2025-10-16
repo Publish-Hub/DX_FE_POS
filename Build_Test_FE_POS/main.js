@@ -162,6 +162,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "AppModule": () => (/* binding */ AppModule)
 /* harmony export */ });
+/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @auth0/angular-jwt */ 67193);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/platform-browser */ 34497);
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-routing.module */ 90158);
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app.component */ 55041);
@@ -183,8 +184,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var ng2_charts__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ng2-charts */ 31208);
 /* harmony import */ var _interceptors_jwt__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./interceptors/jwt */ 52297);
 /* harmony import */ var _interceptors_error__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./interceptors/error */ 70810);
-/* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @auth0/angular-jwt */ 67193);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/core */ 22560);
+
 
 
 
@@ -219,7 +220,10 @@ AppModule.ɵmod = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵd
   bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_1__.AppComponent]
 });
 AppModule.ɵinj = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineInjector"]({
-  providers: [_auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_10__.JwtHelperService, _services_httpservice_service__WEBPACK_IMPORTED_MODULE_3__.HttpserviceService, src_app_services_header_service__WEBPACK_IMPORTED_MODULE_4__.HeaderService, {
+  providers: [{
+    provide: _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_10__.JWT_OPTIONS,
+    useValue: _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_10__.JWT_OPTIONS
+  }, _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_10__.JwtHelperService, _services_httpservice_service__WEBPACK_IMPORTED_MODULE_3__.HttpserviceService, src_app_services_header_service__WEBPACK_IMPORTED_MODULE_4__.HeaderService, {
     provide: _angular_common_http__WEBPACK_IMPORTED_MODULE_11__.HTTP_INTERCEPTORS,
     useClass: _interceptors_jwt__WEBPACK_IMPORTED_MODULE_7__.JwtInterceptor,
     multi: true
