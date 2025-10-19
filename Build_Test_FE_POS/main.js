@@ -284,9 +284,6 @@ class AuthService {
     this._isRefreshing = false;
     this._tokenSubject = new rxjs__WEBPACK_IMPORTED_MODULE_3__.BehaviorSubject(null);
   }
-  // ─────────────────────────────────────────────────────────────
-  // 🔐 Core Auth APIs
-  // ─────────────────────────────────────────────────────────────
   ResetPassword(body) {
     return this.http.post(`${this.apiUrl}User/ResetPassword`, body);
   }
@@ -299,9 +296,6 @@ class AuthService {
   GetUserDetails(id) {
     return this.http.get(`${this.apiUrl}User/GetUSERDetails?userId=${id}`);
   }
-  // ─────────────────────────────────────────────────────────────
-  // 🧑‍💻 Local Development (Bypass)
-  // ─────────────────────────────────────────────────────────────
   autoLoginLocal() {
     if (_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.bypassAuth && _environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.staticAuth?.token) {
       const s = _environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.staticAuth;
@@ -320,9 +314,6 @@ class AuthService {
     }
     return (0,rxjs__WEBPACK_IMPORTED_MODULE_4__.of)(false);
   }
-  // ─────────────────────────────────────────────────────────────
-  // ♻️ Refresh Token (used by Interceptors / Guards)
-  // ─────────────────────────────────────────────────────────────
   refreshToken(refreshToken) {
     this._isRefreshing = true;
     this._tokenSubject.next(null);
@@ -351,9 +342,6 @@ class AuthService {
       return (0,rxjs__WEBPACK_IMPORTED_MODULE_8__.throwError)(() => err);
     }));
   }
-  // ─────────────────────────────────────────────────────────────
-  // 📡 Refresh State — lets interceptors know if a refresh is happening
-  // ─────────────────────────────────────────────────────────────
   getRefreshState() {
     return {
       isRefreshing: this._isRefreshing,
@@ -1059,62 +1047,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/environments/environment */ 92340);
 /* harmony import */ var _shared_routes_apiUrl__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../shared/routes/apiUrl */ 15411);
 /* harmony import */ var _auth0_angular_jwt__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @auth0/angular-jwt */ 67193);
-// import { Injectable } from '@angular/core';
-// import {
-//   ActivatedRouteSnapshot,
-//   RouterStateSnapshot,
-//   CanActivate,
-//   Router,
-// } from '@angular/router';
-// import { Observable } from 'rxjs';
-// import { SharedService } from './shared.service';
-// import { TokenStorageService } from './token-storage.service';
-// import { environment } from 'src/environments/environment';
-// @Injectable({
-//   providedIn: 'root',
-// })
-// export class AuthGuard implements CanActivate {
-//   constructor(
-//     private router: Router,
-//     private sharedService: SharedService,
-//     private tokenStore: TokenStorageService
-//   ) { }
-//   canActivate(
-//     next: ActivatedRouteSnapshot,
-//     state: RouterStateSnapshot
-//   ): Observable<boolean> | Promise<boolean> | boolean {
-//     const token = this.sharedService.getToken;
-//     const ssoAccess = this.tokenStore.ssoAccessToken;
-//     const ssoRefresh = this.tokenStore.ssoRefreshToken;
-//     const inSSOMode = this.tokenStore.isSingleSignOnMode;
-//     // ✅ 1. Dev bypass (local testing)
-//     if (environment.bypassAuth && environment.staticAuth?.token) {
-//       console.log('%c[DEV BYPASS]', 'color:orange;', 'Bypassing auth for local dev.');
-//       return true;
-//     }
-//     // ✅ 2. SSO detection
-//     if (inSSOMode && ssoAccess && ssoRefresh) {
-//       console.log('%c[SSO MODE]', 'color:#00b894; font-weight:bold;', 'Detected SSO cookies.');
-//       return true;
-//     }
-//     // ✅ 3. Normal token
-//     if (token && token !== 'undefined') {
-//       return true;
-//     }
-//     // 🚫 4. No valid token → redirect to proper portal
-//     const host = window.location.host;
-//     if (host.indexOf('dxpos.markaziaapis.com') >= 0) {
-//       window.location.href = 'https://portal.markaziahub.com';
-//     } else if (host.indexOf('dxtestpos.markaziaapis.com') >= 0) {
-//       window.location.href = 'https://dxtestportal.markaziahub.com';
-//     } else if (host.indexOf('dxdevpos.markaziaapis.com') >= 0) {
-//       window.location.href = 'https://dxdevportal.markaziahub.com';
-//     } else {
-//       this.router.navigate(['/login']);
-//     }
-//     return false;
-//   }
-// }
 
 
 
@@ -1127,8 +1059,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// Portal ID (for ClickPortal)
-const PORTAL_ID = '9001';
+const PORTAL_ID = '9001'; // POS Portal ID
 const SESSION_FLAG_CLICK = `portalClick:${PORTAL_ID}`;
 const SESSION_FLAG_USER = `ssoUserSaved`;
 const DEV_BYPASS = false;
@@ -1154,12 +1085,11 @@ function handleAuthGuard(route, url) {
   const ssoRefresh = tokenStore.ssoRefreshToken;
   const inSSOMode = tokenStore.isSingleSignOnMode;
   const getAccessEndpoint = `${src_environments_environment__WEBPACK_IMPORTED_MODULE_4__.environment.masterBaseUrl.replace(/\/+$/, '')}/${_shared_routes_apiUrl__WEBPACK_IMPORTED_MODULE_5__.ApiUrls.User.GetAccess.replace(/^\/+/, '')}`;
-  // 1️⃣ Bypass dev mode
+  // pass if local development mode
   if (src_environments_environment__WEBPACK_IMPORTED_MODULE_4__.environment.bypassAuth && src_environments_environment__WEBPACK_IMPORTED_MODULE_4__.environment.staticAuth?.token) {
-    console.log('%c[DEV BYPASS]', 'color:orange;', 'Local auth bypassed.');
     return true;
   }
-  // 2️⃣ If ?token= provided → normal login flow (portal redirect)
+  // If ?token= provided normal login flow (redirect from portal)
   if (urlToken) {
     localStorage.setItem('redirectUrl', route.queryParams['redirectUrl'] || '/');
     tokenStore.saveToken(urlToken);
@@ -1172,17 +1102,17 @@ function handleAuthGuard(route, url) {
     }
     return validateAccessToken(tokenStore, http, authService, router, getAccessEndpoint);
   }
-  // 3️⃣ If SSO cookies exist → auto validate
+  // If SSO cookies exist → auto validate
   if (inSSOMode && ssoAccess && ssoRefresh) {
     ensureSsoUserSaved(tokenStore, jwtHelper);
     ensurePortalClickIfSso(tokenStore, httpService);
     return validateAccessToken(tokenStore, http, authService, router, getAccessEndpoint);
   }
-  // 4️⃣ Normal local token
+  // Normal local token
   if (localToken && localToken !== 'undefined') {
     return true;
   }
-  // 5️⃣ No token → redirect
+  // in case no token found, redirect to portal login
   return redirectToPortal(router);
 }
 // ─────────────────────────────────────────────────────────────
@@ -1979,45 +1909,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ 22560);
 
 
-const TOKEN_KEY = '_token';
+const TOKEN_KEY = 'token';
 const USER_KEY = 'currentUser';
-/**
- * TokenStorageService
- * - Local mode: uses environment.staticAuth when bypassAuth = true
- * - SSO mode:   auto-detects cookies MarkaziaAccessToken / MarkaziaRefreshToken
- * - Normal:     uses localStorage TOKEN_KEY
- */
 class TokenStorageService {
   constructor() {}
-  /* ────────────────────────────────────────────────────────────────────
-   * 1) DEV / BYPASS DETECTION
-   *    If bypassAuth + staticAuth exist, we use the static token and
-   *    completely ignore SSO cookies.
-   * ──────────────────────────────────────────────────────────────────── */
   get devBypass() {
     return !!(!src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.production && src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.bypassAuth && src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.staticAuth?.token);
   }
-  /* ────────────────────────────────────────────────────────────────────
-   * 2) SSO COOKIE HELPERS
-   *    We store SSO tokens in cookies (same format as your other project).
-   *    Cookies contain JSON: {"value":"<token>"} to be robust against chars.
-   * ──────────────────────────────────────────────────────────────────── */
   writeCookieToken(name, value) {
     if (typeof document === 'undefined') return;
     const parts = [];
     if (value) {
       const json = `{"value":"${value}"}`;
       parts.push(`${name}=${json}`);
-      // Keep for 1 day by default; adjust if you want:
       parts.push('Max-Age=86400');
     } else {
-      // Clear immediately
       parts.push(`${name}=`);
       parts.push('expires=Thu, 01 Jan 1970 00:00:00 GMT', 'Max-Age=0');
     }
     parts.push('Path=/');
     parts.push('SameSite=Lax');
-    // Scope cookie for hub domains if relevant
     const hostname = location.hostname;
     if (hostname.includes('markaziahub')) {
       parts.push('Domain=.markaziahub.com');
@@ -2033,12 +1944,10 @@ class TokenStorageService {
     const found = document.cookie.split('; ').find(c => c.startsWith(prefix));
     if (!found) return null;
     const raw = found.substring(prefix.length);
-    // Try raw JSON first
     try {
       const obj = JSON.parse(raw);
       if (typeof obj?.value === 'string' && obj.value.trim()) return obj.value;
     } catch {}
-    // Then URL-decoded JSON (some browsers/frameworks may encode)
     try {
       const decoded = decodeURIComponent(raw);
       const obj = JSON.parse(decoded);
@@ -2049,9 +1958,6 @@ class TokenStorageService {
   deleteCookieToken(name) {
     document.cookie = `${name}=; Max-Age=0; Path=/; SameSite=Lax`;
   }
-  /* ────────────────────────────────────────────────────────────────────
-   * 3) SSO ACCESS / REFRESH TOKENS (auto-ignored in devBypass)
-   * ──────────────────────────────────────────────────────────────────── */
   get ssoAccessToken() {
     if (this.devBypass) return null;
     return this.readCookieToken('MarkaziaAccessToken');
@@ -2066,13 +1972,6 @@ class TokenStorageService {
   ssoRefreshTokenSet(token) {
     this.writeCookieToken('MarkaziaRefreshToken', token);
   }
-  /* ────────────────────────────────────────────────────────────────────
-   * 4) SSO MODE DETECTION
-   *    No env flag. We auto-detect:
-   *    - NOT in dev bypass
-   *    - No local token present
-   *    - Both SSO cookies exist
-   * ──────────────────────────────────────────────────────────────────── */
   get isSingleSignOnMode() {
     if (this.devBypass) return false;
     const localToken = this.readTokenFromStorage();
@@ -2080,22 +1979,12 @@ class TokenStorageService {
     const ssoRefresh = this.ssoRefreshToken;
     return !localToken && !!ssoAccess && !!ssoRefresh;
   }
-  /* ────────────────────────────────────────────────────────────────────
-   * 5) EFFECTIVE ACCESS TOKEN
-   *    Preference:
-   *    - Dev bypass → static token
-   *    - Normal local token (_token)
-   *    - SSO access cookie
-   * ──────────────────────────────────────────────────────────────────── */
   get effectiveAccessToken() {
     if (this.devBypass) {
       return src_environments_environment__WEBPACK_IMPORTED_MODULE_0__.environment.staticAuth.token;
     }
     return this.readTokenFromStorage() || this.ssoAccessToken || '';
   }
-  /* ────────────────────────────────────────────────────────────────────
-   * 6) LOCAL TOKEN STORAGE (normal app login)
-   * ──────────────────────────────────────────────────────────────────── */
   saveToken(token) {
     localStorage.setItem(TOKEN_KEY, token);
   }
@@ -2113,11 +2002,6 @@ class TokenStorageService {
     this.writeCookieToken('MarkaziaAccessToken', null);
     this.writeCookieToken('MarkaziaRefreshToken', null);
   }
-  /* ────────────────────────────────────────────────────────────────────
-   * 7) USER CACHE
-   *    Keep it simple: currentUser in localStorage, plus helpers.
-   *    (Can be extended later to merge employee info if needed.)
-   * ──────────────────────────────────────────────────────────────────── */
   saveUser(user) {
     try {
       localStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -2144,10 +2028,6 @@ class TokenStorageService {
       console.error('Error saving employee info', err);
     }
   }
-  /* ─────────────────────────────────────────────────────────────
-   * 8) NAME HELPERS
-   *    Extract first and last name from user.fullName
-   * ───────────────────────────────────────────────────────────── */
   get firstName() {
     const user = this.getUser;
     if (user?.FirstName) return user.FirstName;

@@ -508,14 +508,7 @@ class HeaderComponent {
     this.email = '';
     this.headerService.title.subscribe(title => {
       this.titleOfPage = title;
-      // this.showTitle = true;
-      // this.headerService.setTitle(this.titleOfPage);
-      // console.log('title', this.titleOfPage);
-      // setTimeout(() => {
-      //   this.titleOfPage = title;
-      // }, 1000);
     });
-
     this.pagename = this.router.url;
     router.events.subscribe(event => {
       if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_10__.NavigationStart) {
@@ -895,11 +888,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/core */ 22560);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @angular/router */ 60124);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/common */ 94666);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @angular/common */ 94666);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! rxjs */ 60116);
 /* harmony import */ var _modal_close_session_modal_close_session_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../modal-close-session/modal-close-session.component */ 59669);
 /* harmony import */ var _ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @ng-bootstrap/ng-bootstrap */ 34534);
-/* harmony import */ var ngx_toastr__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ngx-toastr */ 94817);
 /* harmony import */ var _logout_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./logout.service */ 77787);
 /* harmony import */ var _services_general_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../services/general.service */ 21864);
 /* harmony import */ var _modules_cashier_opening_register_services_openregister_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../modules/cashier/opening-register/services/openregister.service */ 45832);
@@ -909,338 +901,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_subject_service__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../services/subject.service */ 29444);
 /* harmony import */ var _services_httpservice_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../services/httpservice.service */ 79345);
 /* harmony import */ var src_app_services_token_storage_service__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/app/services/token-storage.service */ 11573);
-/* harmony import */ var ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ngx-bootstrap/dropdown */ 82184);
-// import {
-//   Component,
-//   EventEmitter,
-//   HostListener,
-//   Input,
-//   OnInit,
-//   Output,
-// } from '@angular/core';
-// import { NavigationEnd, Router } from '@angular/router';
-// import { ModalLogoutComponent } from './modal-logout/modal-logout.component';
-// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-// import { LogoutService } from './logout.service';
-// import { GeneralService } from '../../../services/general.service';
-// import { OpenregisterService } from '../../modules/cashier/opening-register/services/openregister.service';
-// import { CloseRegisterService } from '../../modules/cashier/close-register/services/close-register.service';
-// import { SharedService } from '../../../services/shared.service';
-// import { DatePipe } from '@angular/common';
-// import { ModalCloseSessionComponent } from '../modal-close-session/modal-close-session.component';
-// import { HttpserviceService } from '../../../services/httpservice.service';
-// import { CommonService } from '../../../services/common.service';
-// import { filter } from 'rxjs';
-// import { SubjectService } from '../../../services/subject.service';
-// import { environment } from '../../../../environments/environment';
-// @Component({
-//   selector: 'app-sidenav',
-//   templateUrl: './sidenav.component.html',
-//   styleUrls: ['./sidenav.component.scss'],
-//   providers: [DatePipe],
-// })
-// export class SidenavComponent implements OnInit {
-//   @Input() sideNavStatus: boolean = true;
-//   @Output() sideNavToggled = new EventEmitter<boolean>();
-//   @Output() titleOfPage = new EventEmitter<string>();
-//   timeRegister: string;
-//   navList: any = [];
-//   cashierNavList;
-//   userMenu = [];
-//   registerSessionCreatedAt: any;
-//   sessionId: number;
-//   toggleCaretIcon = false;
-//   constructor(
-//     private router: Router,
-//     public sharedService: SharedService,
-//     private modalService: NgbModal,
-//     private logoutService: LogoutService,
-//     public openregisterService: OpenregisterService,
-//     public closeRegisterService: CloseRegisterService,
-//     public GeneralService: GeneralService,
-//     public _loginService: HttpserviceService,
-//     public datePipe: DatePipe,
-//     public _commonService: CommonService,
-//     public _subjectService: SubjectService
-//   ) { }
-//   ngOnInit(): void {
-//     this._subjectService.isRegisterOpen.subscribe(res => {
-//       if (res) {
-//         this.getUserMenuNew();
-//         this.GetUserMenu();
-//       }
-//     })
-//     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe((event) => {
-//       let findItem = this.userMenu[0].items.find(x => x.url == event['url']);
-//       let canClickItem = this.userMenu[0].items.find(x => x.canClick);
-//       if (!findItem.canClick) {
-//         this._commonService.NavigateToRoute(canClickItem?.url);
-//       }
-//     });
-//     if (this.sharedService.getRole?.roleId == 1) {
-//       this.GetUserMenu();
-//     }
-//     this.getUserMenuNew();
-//   }
-//   onSelectMenu(index: number) {
-//     this.checkScreenSize();
-//     this.navList.forEach((element: { IsActive: boolean }) => {
-//       element.IsActive = false;
-//     });
-//     for (let i = 0; i < this.navList.length; i++) {
-//       if (i == index) {
-//         this.navList[i].IsActive = true;
-//         this.titleOfPage.emit(this.navList[i].title);
-//       }
-//     }
-//     localStorage.removeItem('collectionOrderNum');
-//     localStorage.removeItem('collectBranchId');
-//     localStorage.removeItem('collectUserId');
-//     localStorage.removeItem('collectSearchText');
-//     localStorage.removeItem('collectVin');
-//   }
-//   onSelectMenuCashier(title) {
-//     // this.checkScreenSize();
-//     // this.navList.forEach((element: { IsActive: boolean }) => {
-//     //   element.IsActive = false;
-//     // });
-//     // this.navList[i].IsActive = true;
-//     this.titleOfPage.emit(title);
-//     localStorage.removeItem('collectionOrderNum');
-//     localStorage.removeItem('collectBranchId');
-//     localStorage.removeItem('collectUserId');
-//     localStorage.removeItem('collectSearchText');
-//     localStorage.removeItem('collectVin');
-//     // this.openAutoClose();
-//     // this.GetUserMenu();
-//   }
-//   checkScreenSize() {
-//     if (window.innerWidth < 600) {
-//       this.sideNavToggled.emit(false);
-//       this.sideNavStatus = false;
-//     }
-//   }
-//   dateSession: string;
-//   sessionEndMinut: any;
-//   openAutoCloseWarning() {
-//     // console.log('openAutoClose');
-//     this.dateSession = this.datePipe.transform(
-//       this.registerSessionCreatedAt,
-//       'MMMM d, y'
-//     );
-//     // Fri Mar 17 2023 22:36:23 GMT+0200 (Eastern European Standard Time)
-//     var dateEndSession = new Date(this.dateSession + ' ' + this.endSession);
-//     // var dateEndSession = new Date('Fri Mar 17 2023 23:55:23');
-//     var dateCurrunt = new Date();
-//     // console.log(dateCurrunt);
-//     let sessionEndMillesecnd =
-//       dateEndSession.getTime() - dateCurrunt.getTime() - 900000;
-//     // console.log('sessionEndMillesecnd', sessionEndMillesecnd);
-//     this.sessionEndMinut =
-//       dateEndSession.getMinutes() - dateCurrunt.getMinutes();
-//     // console.log('sessionEndMinut', this.sessionEndMinut);
-//     if (sessionEndMillesecnd > 0) {
-//       setTimeout(() => {
-//         const modalRef = this.modalService.open(ModalCloseSessionComponent);
-//         modalRef.componentInstance.type = 1;
-//         modalRef.componentInstance.minute = this.sessionEndMinut;
-//       }, sessionEndMillesecnd);
-//     }
-//   }
-//   openAutoClose() {
-//     // console.log('openAutoClose');
-//     this.dateSession = this.datePipe.transform(
-//       this.registerSessionCreatedAt,
-//       'MMMM d, y'
-//     );
-//     var dateEndSession = new Date(this.dateSession + ' ' + this.endSession);
-//     var dateCurrunt = new Date();
-//     let sessionEndMillesecnd = dateEndSession.getTime() - dateCurrunt.getTime();
-//     // console.log('sessionEndMillesecnd', sessionEndMillesecnd);
-//     if (sessionEndMillesecnd > 0) {
-//       setTimeout(() => {
-//         const modalRef = this.modalService.open(ModalCloseSessionComponent);
-//         modalRef.componentInstance.type = 2;
-//         sessionStorage.removeItem('token');
-//         setTimeout(() => {
-//           //window.location.href = 'https://dx-portalsstage.azurewebsites.net/login';
-//           this.redirectUserAccordingToEnv();
-//         }, 5000)
-//         //}, 10000);
-//       }, sessionEndMillesecnd);
-//     }
-//   }
-//   redirectUserAccordingToEnv() {
-//     let host = window.location.host;
-//     //STAGING
-//     if (host.indexOf('dxpos.markaziaapis.com') >= 0) {
-//       window.location.href = 'https://portal.markaziahub.com'
-//     }
-//     //TEST
-//     else if (host.indexOf('dxtestpos.markaziaapis.com') >= 0) {
-//       window.location.href = 'https://dxtestportal.markaziahub.com';
-//     }
-//     //LOCAL
-//     else if (host.indexOf('dxdevpos.markaziaapis.com') >= 0) {
-//       // I AM USING PORTAL ON PORT 4201 SO THAT'S' WHY I REDIRECTED HERE
-//       window.location.href = 'https://dxdevportal.markaziahub.com';
-//     }
-//   }
-//   logout() {
-//     //const modalRef = this.modalService.open(ModalLogoutComponent);
-//     //modalRef.componentInstance.name = 'World';
-//     //modalRef.componentInstance.semdToConfirm.subscribe((result: any) => {
-//     //  this.modalService.dismissAll();
-//     //});
-//     this.LogoutUser();
-//     localStorage.removeItem('fullName');
-//     localStorage.removeItem('role');
-//     localStorage.removeItem('userid');
-//     localStorage.removeItem('branch');
-//     localStorage.removeItem('city');
-//     localStorage.removeItem('register');
-//     localStorage.removeItem('token');
-//     localStorage.removeItem('permissions');
-//     localStorage.removeItem('collectionOrderNum');
-//     localStorage.removeItem('collectBranchId');
-//     localStorage.removeItem('collectUserId');
-//     localStorage.removeItem('collectSearchText');
-//     localStorage.removeItem('collectVin');
-//     localStorage.removeItem('closeSession');
-//     // localStorage.removeItem('identity');
-//     // localStorage.removeItem('password');
-//     // localStorage.removeItem('rememberMe');
-//     sessionStorage.removeItem('token');
-//     sessionStorage.removeItem('id');
-//     //this.router.navigate(['/login']);
-//     // window.location.href = 'https://dx-portalsstage.azurewebsites.net/login';
-//     window.location.replace(localStorage.getItem('redirectUrl'))
-//     localStorage.removeItem('redirectUrl')
-//     // this.sharedService.getToken = '';\
-//   }
-//   LogoutUser() {
-//     return this.logoutService
-//       .LogoutUser(+this.sharedService.getUserId)
-//       .subscribe((response: any) => {
-//         if (response) {
-//           // this.roles = response.data.permissions;
-//         }
-//       });
-//   }
-//   canOpenRegister: boolean;
-//   opendSession: any;
-//   openreg: boolean;
-//   closereg: boolean;
-//   clollectreg: boolean;
-//   CanOpenRegisterSession() {
-//     return this.openregisterService
-//       .CanOpenRegisterSession({})
-//       .subscribe((response: any) => {
-//         if (response.isSuccess == true) {
-//           this.canOpenRegister = response.data.canOpenRegister;
-//           this.opendSession = response.data.opendSession;
-//           if (this.canOpenRegister == true) {
-//             this.openreg = true;
-//             this.closereg = false;
-//             this.clollectreg = false;
-//           } else if (this.canOpenRegister == false) {
-//             // this.router.navigate(['/collect']);
-//             this.openreg = false;
-//             this.closereg = true;
-//             this.clollectreg = true;
-//           }
-//           // else if (this.canOpenRegister == false && this.opendSession) {
-//           //   this.openreg = false;
-//           //   this.closereg = true;
-//           //   this.clollectreg = true;
-//           // } else if (this.canOpenRegister == false && !this.opendSession) {
-//           //   this.openreg = false;
-//           //   this.closereg = false;
-//           //   this.clollectreg = false;
-//           // }
-//           // this.canOpenRegister = true;
-//         }
-//       });
-//   }
-//   canCloseRegisterSession: boolean;
-//   CanCloseRegisterSession() {
-//     return this.closeRegisterService
-//       .CanCloseRegisterSession({})
-//       .subscribe((response: any) => {
-//         if (response.isSuccess == true) {
-//           this.canCloseRegisterSession = response.data.opendSession
-//             ? true
-//             : false;
-//           this.registerSessionCreatedAt =
-//             response.data?.registerSession?.createdAt;
-//         }
-//       });
-//   }
-//   cashierMenu: any;
-//   registerSession: any;
-//   endSession: any;
-//   oppendAt: any;
-//   isIpAddres: boolean;
-//   hasOppendSession: boolean;
-//   getUserMenuNew() {
-//     this.GeneralService.GetUserMenuNew(17001).subscribe((response: any) => {
-//       //this.userMenu = response?.data?.menu;
-//       let editMenu = response?.data?.menu;
-//       this.userMenu = [];
-//       editMenu.forEach(x => {
-//         let isExist = x.items.filter(item => item?.canView);
-//         if (isExist?.length > 0) {
-//           this.userMenu = [...this.userMenu, { ...x, viewPermission: true }];
-//           console.log(this.userMenu);
-//         }
-//       })
-//       this.cashierNavList = response?.data?.menu[0];
-//       if (this.sharedService.getRole?.roleId == 1) {
-//         let isExist = this.cashierNavList.items.filter(item => !item?.canView);
-//         if (!isExist) {
-//           this.isIpAddres = false;
-//           localStorage.setItem('IsFoundIPAddress', '1');
-//         } else {
-//           localStorage.removeItem('IsFoundIPAddress');
-//         }
-//       }
-//       for (let menu of this.userMenu) {
-//         let findItem = menu.items.find(x => x.canClick);
-//         if (findItem) {
-//           this._commonService.NavigateToRoute(findItem.url);
-//           break;
-//         }
-//       }
-//     })
-//   }
-//   handler() {
-//     this.toggleCaretIcon = !this.toggleCaretIcon;
-//   }
-//   GetUserMenu() {
-//     return this.GeneralService.GetUserMenu({}).subscribe((response: any) => {
-//       if (response.isSuccess) {
-//         this.cashierMenu = response.data[0]?.cashier;
-//         this.registerSession = response.data[0]?.registerSession;
-//         this.registerSessionCreatedAt = this.registerSession?.oppendAt;
-//         this.sessionId = this.registerSession?.currentSessionId;
-//         localStorage.setItem('current_session', this.sessionId?.toString());
-//         this.endSession = this.registerSession?.allowedToTime;
-//         this.hasOppendSession = this.registerSession?.hasOppendSession;
-//         this.isIpAddres = true;
-//         this._subjectService.sessionDetails.next({ opened: this.hasOppendSession });
-//         if (this.hasOppendSession) {
-//           setTimeout(() => {
-//             this.openAutoCloseWarning();
-//           }, 2000);
-//           setTimeout(() => {
-//             this.openAutoClose();
-//           }, 2000);
-//         }
-//       }
-//     });
-//   }
-// }
-
+/* harmony import */ var ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ngx-bootstrap/dropdown */ 82184);
 
 
 
@@ -1475,11 +1136,9 @@ function SidenavComponent_div_5_Template(rf, ctx) {
   }
 }
 class SidenavComponent {
-  constructor(router, route, modalService, toastr, logoutService, GeneralService, openregisterService, closeRegisterService, sharedService, _commonService, _subjectService, _loginService, datePipe, tokenStore) {
+  constructor(router, modalService, logoutService, GeneralService, openregisterService, closeRegisterService, sharedService, _commonService, _subjectService, _loginService, datePipe, tokenStore) {
     this.router = router;
-    this.route = route;
     this.modalService = modalService;
-    this.toastr = toastr;
     this.logoutService = logoutService;
     this.GeneralService = GeneralService;
     this.openregisterService = openregisterService;
@@ -1496,14 +1155,8 @@ class SidenavComponent {
     this.navList = [];
     this.userMenu = [];
     this.toggleCaretIcon = false;
-    // ==============================
-    // 🔹 Authentication / SSO
-    // ==============================
     this.token = '';
     this.redirectUrl = '';
-    // ==============================
-    // 🔹 Miscellaneous
-    // ==============================
     this.status = 'ONLINE';
     this.isConnected = true;
   }
@@ -1521,7 +1174,6 @@ class SidenavComponent {
         this._commonService.NavigateToRoute(canClickItem?.url);
       }
     });
-    // For normal users
     if (this.sharedService.getRole?.roleId == 1) {
       this.GetUserMenu();
     }
@@ -1575,13 +1227,9 @@ class SidenavComponent {
         };
         localStorage.setItem('register', JSON.stringify(register));
       }
-      // finally load menu (optional if already done)
       this.getUserMenuNew();
     });
   }
-  // ===========================================
-  // 🟢 EXISTING COMPONENT LOGIC (unchanged)
-  // ===========================================
   onSelectMenu(index) {
     this.checkScreenSize();
     this.navList.forEach(element => {
@@ -1613,9 +1261,6 @@ class SidenavComponent {
       this.sideNavStatus = false;
     }
   }
-  // ===========================================
-  // 🟢 MENU HANDLING
-  // ===========================================
   getUserMenuNew() {
     this.GeneralService.GetUserMenuNew(17001).subscribe(response => {
       let editMenu = response?.data?.menu;
@@ -1674,9 +1319,6 @@ class SidenavComponent {
       }
     });
   }
-  // ===========================================
-  // 🟢 AUTO CLOSE & LOGOUT LOGIC
-  // ===========================================
   openAutoCloseWarning() {
     this.dateSession = this.datePipe.transform(this.registerSessionCreatedAt, 'MMMM d, y');
     var dateEndSession = new Date(this.dateSession + ' ' + this.endSession);
@@ -1728,7 +1370,7 @@ class SidenavComponent {
   }
 }
 SidenavComponent.ɵfac = function SidenavComponent_Factory(t) {
-  return new (t || SidenavComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_12__.Router), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_12__.ActivatedRoute), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_13__.NgbModal), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](ngx_toastr__WEBPACK_IMPORTED_MODULE_14__.ToastrService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_logout_service__WEBPACK_IMPORTED_MODULE_1__.LogoutService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_general_service__WEBPACK_IMPORTED_MODULE_2__.GeneralService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_modules_cashier_opening_register_services_openregister_service__WEBPACK_IMPORTED_MODULE_3__.OpenregisterService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_modules_cashier_close_register_services_close_register_service__WEBPACK_IMPORTED_MODULE_4__.CloseRegisterService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_shared_service__WEBPACK_IMPORTED_MODULE_5__.SharedService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_common_service__WEBPACK_IMPORTED_MODULE_6__.CommonService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_subject_service__WEBPACK_IMPORTED_MODULE_7__.SubjectService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_httpservice_service__WEBPACK_IMPORTED_MODULE_8__.HttpserviceService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_angular_common__WEBPACK_IMPORTED_MODULE_15__.DatePipe), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](src_app_services_token_storage_service__WEBPACK_IMPORTED_MODULE_9__.TokenStorageService));
+  return new (t || SidenavComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_12__.Router), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_ng_bootstrap_ng_bootstrap__WEBPACK_IMPORTED_MODULE_13__.NgbModal), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_logout_service__WEBPACK_IMPORTED_MODULE_1__.LogoutService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_general_service__WEBPACK_IMPORTED_MODULE_2__.GeneralService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_modules_cashier_opening_register_services_openregister_service__WEBPACK_IMPORTED_MODULE_3__.OpenregisterService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_modules_cashier_close_register_services_close_register_service__WEBPACK_IMPORTED_MODULE_4__.CloseRegisterService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_shared_service__WEBPACK_IMPORTED_MODULE_5__.SharedService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_common_service__WEBPACK_IMPORTED_MODULE_6__.CommonService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_subject_service__WEBPACK_IMPORTED_MODULE_7__.SubjectService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_services_httpservice_service__WEBPACK_IMPORTED_MODULE_8__.HttpserviceService), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](_angular_common__WEBPACK_IMPORTED_MODULE_14__.DatePipe), _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdirectiveInject"](src_app_services_token_storage_service__WEBPACK_IMPORTED_MODULE_9__.TokenStorageService));
 };
 SidenavComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineComponent"]({
   type: SidenavComponent,
@@ -1740,7 +1382,7 @@ SidenavComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10_
     sideNavToggled: "sideNavToggled",
     titleOfPage: "titleOfPage"
   },
-  features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵProvidersFeature"]([_angular_common__WEBPACK_IMPORTED_MODULE_15__.DatePipe])],
+  features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵProvidersFeature"]([_angular_common__WEBPACK_IMPORTED_MODULE_14__.DatePipe])],
   decls: 6,
   vars: 7,
   consts: [[1, "side-nav-content"], ["class", "register-open", 4, "ngIf"], ["class", "d-none nav-list d-flex flex-column gap-3", 3, "ngClass", 4, "ngIf"], [1, "nav-list", 3, "ngClass"], [4, "ngFor", "ngForOf"], ["class", "col-xs-3", 4, "ngIf"], [1, "register-open"], [1, "m-0", "mb-2"], [1, "d-none", "nav-list", "d-flex", "flex-column", "gap-3", 3, "ngClass"], [4, "ngIf"], ["dropdown", "", 1, "btn-group"], ["dropdownToggle", "", "type", "button", 1, "btn", "dropdown-toggle", 3, "id"], ["src", "/assets/images/navicon/dashboardIcon2.svg"], ["src", "/assets/images/navicon/angel-down.svg"], ["class", "dropdown-menu", "role", "menu", 3, "id", 4, "dropdownMenu"], ["role", "menu", 1, "dropdown-menu", 3, "id"], ["routerLinkActive", "active", 1, "nav-list-item", 3, "ngStyle", "routerLink", "disabled", "hidden", "click"], ["rla", "routerLinkActive"], ["alt", "", 3, "src"], [1, "w-100"], [1, "d-flex", "align-items-center", "justify-content-between", "my-3"], [1, "m-0", "dark-gray", "font-18", "fw-600"], ["src", "/assets/images/navicon/angel-down.svg", 1, "me-2"], [1, "m-0", "p-0", "overflow-scroll-menu"], ["routerLinkActive", "active", 1, "nav-list-item", 3, "ngStyle", "routerLink", "routerLinkActiveOptions", "disabled", "hidden", "click"], [1, "col-xs-3"], [1, "ps-3", 2, "position", "fixed", "bottom", "0"], [1, "logout-btn", "align-items-center", "d-flex", "gap-2", "justify-content-between", "dark-gray", "fw-700", 2, "cursor", "pointer", 3, "click"], [1, "fas", "fa-arrow-circle-left", "fa-2x", "primary-clr"], [1, "primary-clr", "text-center", "font-14", "fw-500"]],
@@ -1768,7 +1410,7 @@ SidenavComponent.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10_
       _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵproperty"]("ngIf", ctx.sideNavStatus);
     }
   },
-  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_15__.NgClass, _angular_common__WEBPACK_IMPORTED_MODULE_15__.NgForOf, _angular_common__WEBPACK_IMPORTED_MODULE_15__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_15__.NgStyle, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLink, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLinkActive, ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_16__.BsDropdownMenuDirective, ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_16__.BsDropdownToggleDirective, ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_16__.BsDropdownDirective, _angular_common__WEBPACK_IMPORTED_MODULE_15__.DatePipe],
+  dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_14__.NgClass, _angular_common__WEBPACK_IMPORTED_MODULE_14__.NgForOf, _angular_common__WEBPACK_IMPORTED_MODULE_14__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_14__.NgStyle, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLink, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLinkActive, ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_15__.BsDropdownMenuDirective, ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_15__.BsDropdownToggleDirective, ngx_bootstrap_dropdown__WEBPACK_IMPORTED_MODULE_15__.BsDropdownDirective, _angular_common__WEBPACK_IMPORTED_MODULE_14__.DatePipe],
   styles: [".side-nav-content[_ngcontent-%COMP%] {\n  color: #929eae;\n  \n  margin-left: 10px;\n  \n  margin-top: 10px;\n}\n\n.nav-list[_ngcontent-%COMP%] {\n  height: 100;\n  padding: 0%;\n  margin-bottom: 0px;\n  list-style: none;\n}\n\n.nav-list-item[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  height: 50px;\n  cursor: pointer;\n  text-align: start;\n  border: 0px;\n  background: none;\n  color: #929eae;\n  width: 98%;\n}\n\n.nav-list-item[_ngcontent-%COMP%]   img[_ngcontent-%COMP%] {\n  width: 25px;\n  height: 25px;\n  margin-right: 15px;\n  margin-left: 10px;\n  text-align: center;\n  line-height: 25px;\n}\n\n.nav-list-item[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  width: 120px;\n  text-transform: capitalize;\n}\n\na[_ngcontent-%COMP%] {\n  text-decoration: none;\n  color: #86888b;\n}\n\n.active[_ngcontent-%COMP%] {\n  background: #dc3545;\n  box-shadow: none;\n  border-radius: 8px;\n  color: white;\n  cursor: pointer;\n}\n\n.a-active[_ngcontent-%COMP%] {\n  text-decoration: none;\n  color: #f5f6f7;\n}\n\n.btn-circle[_ngcontent-%COMP%] {\n  width: 30px;\n  height: 30px;\n  text-align: center;\n  padding: 6px 0;\n  font-size: 12px;\n  line-height: 1.428571429;\n  border-radius: 15px;\n  background: #dc3545;\n  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);\n}\n\n.register-open[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-weight: 500;\n  font-size: 13px;\n  line-height: 16px;\n  color: #1b212d;\n  text-align: center;\n  margin-top: 31px;\n}\n.register-open[_ngcontent-%COMP%]   p[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  color: #dc3545;\n}\n\n.nav-list-item[_ngcontent-%COMP%]:disabled {\n  color: #a9a9a9 !important;\n  color: #cdd4da !important;\n}\n\n.nav-list[_ngcontent-%COMP%]   .btn-group[_ngcontent-%COMP%]    > button[_ngcontent-%COMP%] {\n  width: 100%;\n  font-size: 15px;\n  font-weight: 700;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  border: none;\n  border-bottom: 1px solid #929EAE;\n  border-radius: 0px;\n  padding-bottom: 15px;\n}\n.nav-list[_ngcontent-%COMP%]   .btn-group[_ngcontent-%COMP%]    > button[_ngcontent-%COMP%]:active {\n  border: none;\n}\n.nav-list[_ngcontent-%COMP%]   .btn-group[_ngcontent-%COMP%]    > button[_ngcontent-%COMP%]:after {\n  border: none;\n  margin: 0;\n  content: \"\";\n  display: none;\n}\n.nav-list[_ngcontent-%COMP%]   .btn-group[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  width: 100%;\n}\n\n.logout-btn[_ngcontent-%COMP%] {\n  list-style: none;\n  display: block;\n}\n.logout-btn[_ngcontent-%COMP%]   span[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  font-size: 15px;\n  font-weight: 700;\n  color: rgb(33, 37, 41);\n  gap: 15px;\n}\n\n.overflow-scroll-menu[_ngcontent-%COMP%] {\n  height: 72vh;\n  overflow-y: auto;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvZGFzaGJvYXJkL2xheW91dC9zaWRlbmF2L3NpZGVuYXYuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxjQUFBO0VBQ0EsZ0JBQUE7RUFDQSxpQkFBQTtFQUNGO0dBQUE7RUFDSSxnQkFBQTtBQUVKOztBQUNBO0VBQ0UsV0FBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0FBRUY7O0FBQ0E7RUFDRSxhQUFBO0VBQ0EsbUJBQUE7RUFDQSxZQUFBO0VBQ0EsZUFBQTtFQUNBLGlCQUFBO0VBQ0EsV0FBQTtFQUNBLGdCQUFBO0VBQ0EsY0FBQTtFQUNBLFVBQUE7QUFFRjs7QUFLQTtFQUNFLFdBQUE7RUFDQSxZQUFBO0VBQ0Esa0JBQUE7RUFDQSxpQkFBQTtFQUNBLGtCQUFBO0VBQ0EsaUJBQUE7QUFGRjs7QUFLQTtFQUNFLFlBQUE7RUFDQSwwQkFBQTtBQUZGOztBQUtBO0VBQ0UscUJBQUE7RUFDQSxjQUFBO0FBRkY7O0FBS0E7RUFDRSxtQkFBQTtFQUNBLGdCQUFBO0VBQ0Esa0JBQUE7RUFDQSxZQUFBO0VBQ0EsZUFBQTtBQUZGOztBQUtBO0VBQ0UscUJBQUE7RUFDQSxjQUFBO0FBRkY7O0FBS0E7RUFDRSxXQUFBO0VBQ0EsWUFBQTtFQUNBLGtCQUFBO0VBQ0EsY0FBQTtFQUNBLGVBQUE7RUFDQSx3QkFBQTtFQUNBLG1CQUFBO0VBQ0EsbUJBQUE7RUFDQSw0Q0FBQTtBQUZGOztBQU1FO0VBQ0UsZ0JBQUE7RUFDQSxlQUFBO0VBQ0EsaUJBQUE7RUFDQSxjQUFBO0VBQ0Esa0JBQUE7RUFDQSxnQkFBQTtBQUhKO0FBS0k7RUFDRSxjQUFBO0FBSE47O0FBUUE7RUFDRSx5QkFBQTtFQUNBLHlCQUFBO0FBTEY7O0FBVUk7RUFDRSxXQUFBO0VBQ0EsZUFBQTtFQUNBLGdCQUFBO0VBQ0EsYUFBQTtFQUNBLDhCQUFBO0VBQ0EsbUJBQUE7RUFDQSxZQUFBO0VBQ0EsZ0NBQUE7RUFDQSxrQkFBQTtFQUNBLG9CQUFBO0FBUE47QUFTTTtFQUNFLFlBQUE7QUFQUjtBQVVNO0VBQ0UsWUFBQTtFQUNBLFNBQUE7RUFDQSxXQUFBO0VBQ0EsYUFBQTtBQVJSO0FBWUk7RUFDRSxXQUFBO0FBVk47O0FBZUE7RUFDRSxnQkFBQTtFQUNBLGNBQUE7QUFaRjtBQWNFO0VBQ0UsYUFBQTtFQUNBLDhCQUFBO0VBQ0EsbUJBQUE7RUFDQSxlQUFBO0VBQ0EsZ0JBQUE7RUFDQSxzQkFBQTtFQUNBLFNBQUE7QUFaSjs7QUFlQTtFQUNFLFlBQUE7RUFDQSxnQkFBQTtBQVpGIiwic291cmNlc0NvbnRlbnQiOlsiLnNpZGUtbmF2LWNvbnRlbnQge1xyXG4gIGNvbG9yOiAjOTI5ZWFlO1xyXG4gIC8qd2lkdGg6IDIzMHB4OyovXHJcbiAgbWFyZ2luLWxlZnQ6IDEwcHg7XHJcbi8qICBtYXJnaW4tcmlnaHQ6IDEwcHg7XHJcbiovICBtYXJnaW4tdG9wOiAxMHB4O1xyXG59XHJcblxyXG4ubmF2LWxpc3Qge1xyXG4gIGhlaWdodDogMTAwO1xyXG4gIHBhZGRpbmc6IDAlO1xyXG4gIG1hcmdpbi1ib3R0b206IDBweDtcclxuICBsaXN0LXN0eWxlOiBub25lO1xyXG59XHJcblxyXG4ubmF2LWxpc3QtaXRlbSB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG4gIGhlaWdodDogNTBweDtcclxuICBjdXJzb3I6IHBvaW50ZXI7XHJcbiAgdGV4dC1hbGlnbjogc3RhcnQ7XHJcbiAgYm9yZGVyOiAwcHg7XHJcbiAgYmFja2dyb3VuZDogbm9uZTtcclxuICBjb2xvcjogIzkyOWVhZTtcclxuICB3aWR0aDogOTglO1xyXG59XHJcbi8vIC5uYXYtbGlzdC1vcGVuIC5uYXYtbGlzdC1pdGVtOmhvdmVye1xyXG4vLyAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoOTksIDkwLCA5MCwgMC4zKTtcclxuLy8gICBib3JkZXItcmFkaXVzOiAxMHB4O1xyXG4vLyAgIGN1cnNvcjogcG9pbnRlcjtcclxuLy8gfVxyXG4ubmF2LWxpc3QtaXRlbSBpbWcge1xyXG4gIHdpZHRoOiAyNXB4O1xyXG4gIGhlaWdodDogMjVweDtcclxuICBtYXJnaW4tcmlnaHQ6IDE1cHg7XHJcbiAgbWFyZ2luLWxlZnQ6IDEwcHg7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gIGxpbmUtaGVpZ2h0OiAyNXB4O1xyXG59XHJcblxyXG4ubmF2LWxpc3QtaXRlbSBzcGFuIHtcclxuICB3aWR0aDogMTIwcHg7XHJcbiAgdGV4dC10cmFuc2Zvcm06IGNhcGl0YWxpemU7XHJcbn1cclxuXHJcbmEge1xyXG4gIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxuICBjb2xvcjogIzg2ODg4YjtcclxufVxyXG5cclxuLmFjdGl2ZSB7XHJcbiAgYmFja2dyb3VuZDogI2RjMzU0NTtcclxuICBib3gtc2hhZG93OiBub25lO1xyXG4gIGJvcmRlci1yYWRpdXM6IDhweDtcclxuICBjb2xvcjogd2hpdGU7XHJcbiAgY3Vyc29yOiBwb2ludGVyO1xyXG59XHJcblxyXG4uYS1hY3RpdmUge1xyXG4gIHRleHQtZGVjb3JhdGlvbjogbm9uZTtcclxuICBjb2xvcjogI2Y1ZjZmNztcclxufVxyXG5cclxuLmJ0bi1jaXJjbGUge1xyXG4gIHdpZHRoOiAzMHB4O1xyXG4gIGhlaWdodDogMzBweDtcclxuICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgcGFkZGluZzogNnB4IDA7XHJcbiAgZm9udC1zaXplOiAxMnB4O1xyXG4gIGxpbmUtaGVpZ2h0OiAxLjQyODU3MTQyOTtcclxuICBib3JkZXItcmFkaXVzOiAxNXB4O1xyXG4gIGJhY2tncm91bmQ6ICNkYzM1NDU7XHJcbiAgYm94LXNoYWRvdzogMHB4IDEwcHggMjBweCByZ2JhKDAsIDAsIDAsIDAuMSk7XHJcbn1cclxuXHJcbi5yZWdpc3Rlci1vcGVuIHtcclxuICBwIHtcclxuICAgIGZvbnQtd2VpZ2h0OiA1MDA7XHJcbiAgICBmb250LXNpemU6IDEzcHg7XHJcbiAgICBsaW5lLWhlaWdodDogMTZweDtcclxuICAgIGNvbG9yOiAjMWIyMTJkO1xyXG4gICAgdGV4dC1hbGlnbjogY2VudGVyO1xyXG4gICAgbWFyZ2luLXRvcDogMzFweDtcclxuXHJcbiAgICBzcGFuIHtcclxuICAgICAgY29sb3I6ICNkYzM1NDU7XHJcbiAgICB9XHJcbiAgfVxyXG59XHJcblxyXG4ubmF2LWxpc3QtaXRlbTpkaXNhYmxlZCB7XHJcbiAgY29sb3I6ICNhOWE5YTkgIWltcG9ydGFudDtcclxuICBjb2xvcjogI2NkZDRkYSAhaW1wb3J0YW50O1xyXG59XHJcblxyXG4ubmF2LWxpc3Qge1xyXG4gIC5idG4tZ3JvdXAge1xyXG4gICAgJiA+IGJ1dHRvbiB7XHJcbiAgICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgICBmb250LXNpemU6IDE1cHg7XHJcbiAgICAgIGZvbnQtd2VpZ2h0OiA3MDA7XHJcbiAgICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICAgIGp1c3RpZnktY29udGVudDogc3BhY2UtYmV0d2VlbjtcclxuICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICAgICAgYm9yZGVyOiBub25lO1xyXG4gICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgIzkyOUVBRTtcclxuICAgICAgYm9yZGVyLXJhZGl1czogMHB4O1xyXG4gICAgICBwYWRkaW5nLWJvdHRvbTogMTVweDtcclxuXHJcbiAgICAgICY6YWN0aXZlIHtcclxuICAgICAgICBib3JkZXI6IG5vbmU7XHJcbiAgICAgIH1cclxuXHJcbiAgICAgICY6YWZ0ZXIge1xyXG4gICAgICAgIGJvcmRlcjogbm9uZTtcclxuICAgICAgICBtYXJnaW46IDA7XHJcbiAgICAgICAgY29udGVudDogJyc7XHJcbiAgICAgICAgZGlzcGxheTogbm9uZTtcclxuICAgICAgfVxyXG4gICAgfVxyXG5cclxuICAgIC5kcm9wZG93bi1tZW51IHtcclxuICAgICAgd2lkdGg6IDEwMCU7XHJcbiAgICB9XHJcbiAgfVxyXG59XHJcblxyXG4ubG9nb3V0LWJ0biB7XHJcbiAgbGlzdC1zdHlsZTogbm9uZTtcclxuICBkaXNwbGF5OiBibG9jaztcclxuXHJcbiAgc3BhbiB7XHJcbiAgICBkaXNwbGF5OiBmbGV4O1xyXG4gICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuO1xyXG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuICAgIGZvbnQtc2l6ZTogMTVweDtcclxuICAgIGZvbnQtd2VpZ2h0OiA3MDA7XHJcbiAgICBjb2xvcjpyZ2IoMzMsIDM3LCA0MSk7XHJcbiAgICBnYXA6MTVweDtcclxuICB9XHJcbn1cclxuLm92ZXJmbG93LXNjcm9sbC1tZW51IHtcclxuICBoZWlnaHQ6IDcydmg7XHJcbiAgb3ZlcmZsb3cteTogYXV0bztcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
 });
 
