@@ -1002,11 +1002,19 @@ class JwtInterceptor {
     return tokenSubject.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_10__.filter)(t => !!t), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_11__.take)(1), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_9__.switchMap)(t => next.handle(this.addAuth(req, t))));
   }
   addAuth(req, token) {
-    return req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    if (this.tokenStore.isSingleSignOnMode) {
+      return req.clone({
+        setHeaders: {
+          HubAuthorization: `Bearer ${token}`
+        }
+      });
+    } else {
+      return req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
   }
 }
 JwtInterceptor.ɵfac = function JwtInterceptor_Factory(t) {
