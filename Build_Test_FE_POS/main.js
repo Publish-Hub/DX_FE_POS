@@ -1121,7 +1121,7 @@ function handleAuthGuard(route, url) {
   // If SSO cookies exist → auto validate
   if (inSSOMode && ssoAccess && ssoRefresh) {
     ensureSsoUserSaved(tokenStore, jwtHelper);
-    // ensurePortalClickIfSso(tokenStore, httpService);
+    ensurePortalClickIfSso(tokenStore, httpService);
     return validateAccessToken(tokenStore, http, authService, router, getAccessEndpoint);
   }
   // Normal local token
@@ -1175,7 +1175,7 @@ function refreshAndRetry(authService, tokenStore, router) {
   return tokenSubject.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_14__.filter)(t => t !== null), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_15__.take)(1), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_11__.map)(() => true));
 }
 function ensureSsoUserSaved(tokenStore, jwtHelper) {
-  if (DEV_BYPASS || !tokenStore.isSingleSignOnMode) {
+  if (DEV_BYPASS || !tokenStore.isSingleSignOnMode || sessionStorage.getItem(SESSION_FLAG_USER) === '1') {
     return;
   }
   const token = tokenStore.ssoAccessToken;
@@ -1196,17 +1196,17 @@ function ensureSsoUserSaved(tokenStore, jwtHelper) {
   tokenStore.saveUser(user);
   sessionStorage.setItem(SESSION_FLAG_USER, '1');
 }
-// function ensurePortalClickIfSso(tokenStore: TokenStorageService, httpService: HttpService) {
-//   if (sessionStorage.getItem(SESSION_FLAG_CLICK) === '1') return;
-//   const userId = tokenStore.currentUserId;
-//   if (!userId) return;
-//   const fd = new FormData();
-//   fd.append('UserID', String(userId));
-//   fd.append('PortalID', PORTAL_ID);
-//   httpService.post(ApiUrls.User.ClickPortal, fd, 'master').subscribe({
-//     next: () => sessionStorage.setItem(SESSION_FLAG_CLICK, '1'),
-//   });
-// }
+function ensurePortalClickIfSso(tokenStore, httpService) {
+  if (sessionStorage.getItem(SESSION_FLAG_CLICK) === '1') return;
+  const userId = tokenStore.currentUserId;
+  if (!userId) return;
+  const fd = new FormData();
+  fd.append('UserID', String(userId));
+  fd.append('PortalID', PORTAL_ID);
+  httpService.post(_shared_routes_apiUrl__WEBPACK_IMPORTED_MODULE_5__.ApiUrls.User.ClickPortal, fd, 'master').subscribe({
+    next: () => sessionStorage.setItem(SESSION_FLAG_CLICK, '1')
+  });
+}
 function redirectToPortal() {
   const portalLoginUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__.environment.portalPageUrl;
   window.location.href = portalLoginUrl;
@@ -2099,10 +2099,8 @@ class TokenStorageService {
   }
   extractUserId(payload) {
     if (!payload) return null;
-    // ✅ check if the token payload itself has EmployeeID or EmpNo
     if (payload.EmployeeID) return String(payload.EmployeeID);
     if (payload.EmpNo) return String(payload.EmpNo);
-    // ✅ fallback to the standard claims
     const keys = ['nameid', 'sid', 'sub', 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/sid', 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
     for (const k of keys) {
       if (payload?.[k]) return String(payload[k]);
