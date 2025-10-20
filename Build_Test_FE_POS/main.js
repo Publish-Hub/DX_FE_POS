@@ -1119,7 +1119,7 @@ function handleAuthGuard(route, url) {
     return true;
   }
   // in case no token found, redirect to portal login
-  return redirectToPortal(router);
+  return redirectToPortal();
 }
 // ─────────────────────────────────────────────────────────────
 // Helpers
@@ -1165,7 +1165,7 @@ function refreshAndRetry(authService, tokenStore, router) {
   return tokenSubject.pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_14__.filter)(t => t !== null), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_15__.take)(1), (0,rxjs_operators__WEBPACK_IMPORTED_MODULE_11__.map)(() => true));
 }
 function ensureSsoUserSaved(tokenStore, jwtHelper) {
-  if (DEV_BYPASS || !tokenStore.isSingleSignOnMode || sessionStorage.getItem(SESSION_FLAG_USER) === '1') {
+  if (DEV_BYPASS || !tokenStore.isSingleSignOnMode) {
     return;
   }
   const token = tokenStore.ssoAccessToken;
@@ -1197,17 +1197,9 @@ function ensurePortalClickIfSso(tokenStore, httpService) {
     next: () => sessionStorage.setItem(SESSION_FLAG_CLICK, '1')
   });
 }
-function redirectToPortal(router) {
-  const host = window.location.host;
-  if (host.includes('dxpos.markaziaapis.com')) {
-    window.location.href = 'https://portal.markaziahub.com';
-  } else if (host.includes('dxtestpos.markaziaapis.com')) {
-    window.location.href = 'https://dxtestportal.markaziahub.com';
-  } else if (host.includes('dxdevpos.markaziaapis.com')) {
-    window.location.href = 'https://dxdevportal.markaziahub.com';
-  } else {
-    router.navigate(['/login']);
-  }
+function redirectToPortal() {
+  const portalLoginUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__.environment.portalPageUrl;
+  window.location.href = portalLoginUrl;
   return false;
 }
 
