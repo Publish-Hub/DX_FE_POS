@@ -1111,7 +1111,7 @@ function handleAuthGuard(route, url) {
   // If SSO cookies exist → auto validate
   if (inSSOMode && ssoAccess && ssoRefresh) {
     ensureSsoUserSaved(tokenStore, jwtHelper);
-    ensurePortalClickIfSso(tokenStore, httpService);
+    // ensurePortalClickIfSso(tokenStore, httpService);
     return validateAccessToken(tokenStore, http, authService, router, getAccessEndpoint);
   }
   // Normal local token
@@ -1186,17 +1186,17 @@ function ensureSsoUserSaved(tokenStore, jwtHelper) {
   tokenStore.saveUser(user);
   sessionStorage.setItem(SESSION_FLAG_USER, '1');
 }
-function ensurePortalClickIfSso(tokenStore, httpService) {
-  if (sessionStorage.getItem(SESSION_FLAG_CLICK) === '1') return;
-  const userId = tokenStore.currentUserId;
-  if (!userId) return;
-  const fd = new FormData();
-  fd.append('UserID', String(userId));
-  fd.append('PortalID', PORTAL_ID);
-  httpService.post(_shared_routes_apiUrl__WEBPACK_IMPORTED_MODULE_5__.ApiUrls.User.ClickPortal, fd, 'master').subscribe({
-    next: () => sessionStorage.setItem(SESSION_FLAG_CLICK, '1')
-  });
-}
+// function ensurePortalClickIfSso(tokenStore: TokenStorageService, httpService: HttpService) {
+//   if (sessionStorage.getItem(SESSION_FLAG_CLICK) === '1') return;
+//   const userId = tokenStore.currentUserId;
+//   if (!userId) return;
+//   const fd = new FormData();
+//   fd.append('UserID', String(userId));
+//   fd.append('PortalID', PORTAL_ID);
+//   httpService.post(ApiUrls.User.ClickPortal, fd, 'master').subscribe({
+//     next: () => sessionStorage.setItem(SESSION_FLAG_CLICK, '1'),
+//   });
+// }
 function redirectToPortal() {
   const portalLoginUrl = src_environments_environment__WEBPACK_IMPORTED_MODULE_4__.environment.portalPageUrl;
   window.location.href = portalLoginUrl;
