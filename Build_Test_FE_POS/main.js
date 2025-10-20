@@ -943,7 +943,7 @@ class JwtInterceptor {
     return next.handle(authedReq).pipe((0,rxjs_operators__WEBPACK_IMPORTED_MODULE_5__.mergeMap)(event => {
       if (event instanceof _angular_common_http__WEBPACK_IMPORTED_MODULE_4__.HttpResponse) {
         const body = event.body;
-        if (event.url?.startsWith(this.getAccessEndpoint) && body?.Status === true) {
+        if (event.url?.startsWith(this.getAccessEndpoint) && body?.originalResponse?.Status === true) {
           this.saveUserFromGetAccess(body);
         }
         if (body?.Status === false && (body?.Error === 'Token has expired' || body?.Message === 'Token has expired')) {
@@ -959,18 +959,22 @@ class JwtInterceptor {
     }));
   }
   saveUserFromGetAccess(res) {
-    const d = res?.Data;
-    if (!d) return;
-    const id = d.EmployeeID && d.EmployeeID !== 0 ? d.EmployeeID : d.ID && d.ID !== 0 ? d.ID : d.MarkaziaUserID ?? null;
-    const fullName = [d.FirstName, d.SecondName, d.ThirdName, d.LastName].filter(Boolean).join(' ') || d.Email || '';
+    const data = res?.originalResponse?.Data;
+    const enhanced = res?.enhancedUserDetails;
+    if (!data) return;
+    const id = data.EmployeeID && data.EmployeeID !== 0 ? data.EmployeeID : data.ID && data.ID !== 0 ? data.ID : data.MarkaziaUserID ?? null;
+    const fullName = enhanced?.userDetails?.fullName || [data.FirstName, data.SecondName, data.ThirdName, data.LastName].filter(Boolean).join(' ') || data.Email || '';
+    const email = enhanced?.userDetails?.userEmail || data.Email || '';
     this.tokenStore.saveUser({
       nameid: id,
       UserID: id,
-      EmployeeID: d.EmployeeID ?? d.ID ?? null,
-      EmpNo: d.EmpNo ?? null,
-      Email: d.Email ?? '',
+      EmployeeID: data.EmployeeID ?? data.ID ?? null,
+      EmpNo: data.EmpNo ?? null,
+      Email: email,
       fullName,
-      userPortals: []
+      userPortals: [],
+      role: enhanced?.roles?.roleName ?? null,
+      city: enhanced?.city ?? null
     });
     this.tokenStore.saveEmployeeInfo(res);
   }
