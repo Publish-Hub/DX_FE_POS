@@ -5251,7 +5251,7 @@ const environment = {
   // cmBaseUrl: 'http://cmstagebe.markaziatest.com/api/', //staging
   ChathubUrl: 'https://dxdevpos.markaziaapis.com/ChatHub',
   apiUrl: 'https://dxdevpos.markaziaapis.com/api/',
-  apiUrl2: 'https://dxdevadminfinance.markaziaapis.com/api/',
+  apiUrl2: 'https://dxdevmasterold.markaziaapis.com/api/',
   masterBaseUrl: 'https://dxdevmaster.markaziaapis.com/api/',
   cmBaseUrl: 'https://dxdevpns.markaziaapis.com/api/',
   portalPageUrl: 'https://dxdevportal.markaziahub.com/',
