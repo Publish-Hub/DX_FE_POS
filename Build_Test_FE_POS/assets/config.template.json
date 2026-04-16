@@ -1,18 +1,21 @@
 {
     "production": false,
     "bypassAuth": true,
+
     "ChathubUrl": "https://dxdevpos.markaziaapis.com/ChatHub",
     "apiUrl": "https://dxdevpos.markaziaapis.com/api/",
     "apiUrl2": "https://dxdevmasterold.markaziaapis.com/api/",
     "masterBaseUrl": "https://dxdevmaster.markaziaapis.com/api/",
     "cmBaseUrl": "https://dxdevpns.markaziaapis.com/api/",
+
     "portalPageUrl": "https://dxdevportal.markaziahub.com/",
     "markaziaHubUrl": "https://dev.markaziahub.com/",
+
     "staticAuth": {
         "username": "",
         "password": "",
         "token": "",
-        "UserID": 0,
+        "UserID": "",
         "unique_name": "",
         "UserTitleEn": "",
         "UserName": ""
