@@ -1,5 +1,6 @@
 {
     "production": false,
+    "env": "dev",
     "bypassAuth": true,
 
     "ChathubUrl": "https://dxdevpos.markaziaapis.com/ChatHub",
